@@ -11,7 +11,7 @@ reviewsRouter.route('/').post(requireAuth, jsonBodyParser, (req, res, next) => {
   const newReview = { thing_id, rating, text };
 
   for (const [key, value] of Object.entries(newReview))
-    if (value === null)
+    if (value == null)
       return res.status(400).json({
         error: `Missing '${key}' in request body`,
       });

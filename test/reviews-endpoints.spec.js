@@ -28,9 +28,10 @@ describe('Reviews Endpoints', function() {
     );
 
     it(`creates an review, responding with 201 and the new review`, function() {
-      this.retries(3);
+      // this.retries(3);
       const testThing = testThings[0];
       const newReview = {
+        user_id: testUsers[0].id,
         text: 'Test new review',
         rating: 3,
         thing_id: testThing.id,
@@ -71,25 +72,22 @@ describe('Reviews Endpoints', function() {
 
     const requiredFields = ['text', 'rating', 'thing_id'];
 
-    requiredFields.forEach(field => {
-      const testThing = testThings[0];
-      const newReview = {
-        text: 'Test new review',
-        rating: 3,
-        thing_id: testThing.id,
-      };
-
-      it(`responds with 400 and an error message when the '${field}' is missing`, () => {
-        delete newReview[field];
-
-        return supertest(app)
-          .post('/api/reviews')
-          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-          .send(newReview)
-          .expect(400, {
-            error: `Missing '${field}' in request body`,
-          });
-      });
+    const newReview = {
+      text: 'Test new review',
+      rating: 3,
+      thing_id: 4,
+    };
+    it(`responds with 400 and an error message when the 'text' is missing`, () => {
+      console.log(newReview);
+      delete newReview['text'];
+      console.log(newReview);
+      return supertest(app)
+        .post('/api/reviews')
+        .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+        .send(newReview)
+        .expect(400, {
+          error: `Missing 'text' in request body`,
+        });
     });
   });
 });

@@ -3,16 +3,13 @@ const ThingsService = require('./things-service');
 const { requireAuth } = require('../middleware/basic-auth');
 const thingsRouter = express.Router();
 
-thingsRouter
-  .route('/')
-  .all(requireAuth)
-  .get((req, res, next) => {
-    ThingsService.getAllThings(req.app.get('db'))
-      .then(things => {
-        res.json(ThingsService.serializeThings(things));
-      })
-      .catch(next);
-  });
+thingsRouter.route('/').get((req, res, next) => {
+  ThingsService.getAllThings(req.app.get('db'))
+    .then(things => {
+      res.json(ThingsService.serializeThings(things));
+    })
+    .catch(next);
+});
 
 thingsRouter
   .route('/:thing_id')
