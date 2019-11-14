@@ -71,13 +71,15 @@ describe('Things Endpoints', function() {
 
   describe(`GET /api/things/:thing_id`, () => {
     context(`Given no things`, () => {
-      beforeEach(() => db.into('thingful_users').insert(testUsers));
-
+      const testUser = helpers.makeUsersArray()[1];
+      beforeEach('insert things', () =>
+        helpers.seedThingsTables(db, testUsers, testThings, testReviews)
+      );
       it(`responds with 404`, () => {
         const thingId = 123456;
         return supertest(app)
           .get(`/api/things/${thingId}`)
-          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .set('Authorization', helpers.makeAuthHeader(testUser))
           .expect(404, { error: `Thing doesn't exist` });
       });
     });
@@ -126,14 +128,16 @@ describe('Things Endpoints', function() {
   });
 
   describe(`GET /api/things/:thing_id/reviews`, () => {
+    const testUser = helpers.makeUsersArray()[1];
     context(`Given no things`, () => {
-      beforeEach(() => db.into('thingful_users').insert(testUsers));
-
+      beforeEach('insert things', () =>
+        helpers.seedThingsTables(db, testUsers, testThings, testReviews)
+      );
       it(`responds with 404`, () => {
         const thingId = 123456;
         return supertest(app)
           .get(`/api/things/${thingId}/reviews`)
-          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .set('Authorization', helpers.makeAuthHeader(testUser))
           .expect(404, { error: `Thing doesn't exist` });
       });
     });
